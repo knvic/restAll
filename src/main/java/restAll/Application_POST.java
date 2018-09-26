@@ -8,29 +8,28 @@ import restAll.jsonplaceholder_user.User;
 import restAll.metadata_1C.Page1C;
 import restAll.proxy_RestTemplate.GetProxy;
 
-
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class Application_PUT {
+public class Application_POST {
 
 
 
     //static final String  CUSTOMER_PUT= "http://localhost/test/hs/our-services/change/{id}";
     static final String  CUSTOMER_PUT= "http://localhost/test/hs/our-services/{Param1}/list/{Param2}";
+    static final String  CUSTOMER_POST= "http://localhost/test/hs/our-services/create";
+
     public static void main(String args[]) throws IllegalAccessException, NoSuchFieldException {
 
 
         //RestTemplate ДЛЯ ВНУТРЕННИХ АДРЕСОВ
         RestTemplate restTemplate = new RestTemplate();
 
-        //!!!RestTemplate ЧЕРЕЗ PROXY  ДЛЯ ВНЕШНИХ АДРЕСОВ. ИСПОЛЬЗУЕТ СТОРОННИЙ МЕТОД
-        GetProxy getProxy=new GetProxy();
-        RestTemplate restTemplateProxy=getProxy.restTemplate();
-    ///////////////////////////////////////////
 
 
         //Обращаемся к собственной обработке
@@ -52,15 +51,25 @@ public class Application_PUT {
 
         HttpEntity<User[]> entity = new HttpEntity<User[]>(headers);
         Page1C customer=new Page1C();
-        customer.setCode("000000002");
+
         customer.setDescription("Прохоров Прохор Петрович");
         Map<String, String> params = new HashMap<String, String>();
         params.put("Param1", "555");
         params.put("Param2", "777545");
 
-        restTemplate.put(CUSTOMER_PUT, customer, params);
-        System.out.println();
+       // restTemplate.put(CUSTOMER_PUT, customer, params);
 
+        ResponseEntity<Page1C> response = restTemplate.postForEntity(CUSTOMER_POST, customer , Page1C.class);
+
+        Page1C customer1 = response.getBody();
+        URI url = response.getHeaders().getLocation();
+        Date lastModified = new Date(response.getHeaders().getLastModified());
+
+
+
+
+
+       // Date lastModified = new Date(response.getHeaders().getLastModified());
 
 
       /*  HttpStatus statusCode = response.getStatusCode();
